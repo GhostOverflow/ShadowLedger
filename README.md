@@ -121,7 +121,7 @@ Edit `config.yaml` to:
 
 ShadowLedger includes an **experimental Intelligence Mode** with MCP integration for structured Obsidian vault management.
 
-📖 See `AGENTIC.md` for setup details.
+📖 See `MCP.md` for setup details.
 
 **Note:** Requires Docker Desktop + MCP Gateway. Not needed for basic usage.
 
