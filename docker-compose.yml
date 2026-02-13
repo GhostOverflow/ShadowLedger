@@ -1,0 +1,16 @@
+services:
+  mcp-gateway:
+    image: docker/mcp-gateway:latest
+    container_name: shadowledger-mcp-gateway
+    ports:
+      - "8811:8811"
+    command:
+      - --transport=sse
+      - --port=8811
+      - --servers=obsidian
+    volumes:
+      - ~/.docker/mcp:/mcp
+      - /var/run/docker.sock:/var/run/docker.sock
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

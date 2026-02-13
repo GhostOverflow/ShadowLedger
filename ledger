@@ -1,0 +1,46 @@
+#!/bin/bash
+REPO="$(cd "$(dirname "$0")" && pwd)"
+
+case "$1" in
+    start)
+        if pgrep -f daemon.py >/dev/null; then
+            echo "[!] Already running"
+            exit 1
+        fi
+        cd "$REPO"
+        nohup /usr/bin/python3 daemon.py >>/tmp/shadowledger.log 2>&1 &
+        echo "[+] Daemon started (PID: $!)"
+        echo "    Log: tail -f /tmp/shadowledger.log"
+        ;;
+    stop)
+        if pgrep -f daemon.py >/dev/null; then
+            pkill -f daemon.py
+            echo "[+] Daemon stopped"
+        else
+            echo "[!] Not running"
+        fi
+        ;;
+    status)
+        pgrep -f daemon.py >/dev/null && echo "Daemon: [ON]" || echo "Daemon: [OFF]"
+        [[ -f "$REPO/stack.json" ]] && /usr/bin/python3 -c "
+import sys
+sys.path.insert(0,'$REPO')
+from daemon import StackManager
+print(StackManager('$REPO/stack.json').status())
+" 2>/dev/null || echo "Stack: empty"
+        ;;
+    log)
+        tail -f /tmp/shadowledger.log
+        ;;
+    *)
+        echo "ShadowLedger control"
+        echo ""
+        echo "Usage: $0 {setup|start|stop|status|log}"
+        echo ""
+        echo "  start   - Start daemon"
+        echo "  stop    - Stop daemon"
+        echo "  status  - Check status"
+        echo "  log     - Follow daemon log"
+        exit 1
+        ;;
+esac

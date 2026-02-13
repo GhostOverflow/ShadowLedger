@@ -1,0 +1,84 @@
+
+shell:
+  prompt_symbol: ">"  # Auto-detected during setup
+
+
+llm:
+  provider: "groq"  # Set the provider to use "ollama", "groq", "huggingface", or "openrouter"
+  
+  openrouter:
+    api_key: ""  # Set OpenRouter API key
+    model: "nvidia/nemotron-3-nano-30b-a3b:free"  # or "meta-llama/llama-3.3-70b-instruct", "google/gemini-2.0-flash-exp:free"
+    temperature: 0.7
+    top_p: 0.9
+    timeout: 300
+
+  huggingface:
+    api_key: ""  # Set huggingface api key here
+    model: "meta-llama/Llama-3.3-70B-Instruct"
+    temperature: 0.7
+    top_p: 0.9
+    timeout: 300
+  
+  groq:
+    api_key: "" # Set Groq API key here
+    model: "openai/gpt-oss-120b"
+    temperature: 0.7
+    top_p: 0.9
+    timeout: 300
+  
+  ollama:
+    url: "http://localhost:11434"
+    model: "qwen3:latest" #Choose the offline available models.
+    temperature: 0.7
+    top_p: 0.9
+    num_ctx: 4096
+    timeout: 300
+
+
+intelligence_mode: false # Set to true for agentic tool calling. Warning: This will significantly increase the token usage only recommended for paid APIs
+
+# Only used if intelligence_mode = true
+mcp:
+  gateway_url: "http://localhost:8811/sse"
+  target_note: "mcp-test/{date}-note.md"
+
+
+# Used in simple mode (intelligence mode uses Obsidian tools)
+output:
+  directory: "~/Documents/Writeups/mcp-test"
+  filename_pattern: "{date}-notes.md"
+
+
+stack:
+  token_threshold: 1500  # Auto-trigger when stack reaches this size
+  stack_file: "./stack.json"  # Relative to repo directory
+
+
+whitelist:
+  file: "./whitelist.txt"  # Relative to repo directory
+  auto_detect_ip: true  # Auto-capture commands with IPs/hostnames
+
+
+
+system_prompt_simple: |
+   Generate First-person pentest narrative notes draft from command dump, use hostname not "target/victim", successful commands only, ignore errors/local commands, phase headings, explain in 2-3 line paragraphs then bullets for critical items only (creds in backticks, ports/services/shares as tables), no ---/recommendations/observations, treat as ongoing (more dumps coming), try connecting dots between commands to make findings meaningful, mention attack names where possible, no chat.
+    Style (do not add this in output it is just for reference): "SMB supports guest login with read to software$ share. Decompiled manager.exe revealed sqlsvc:3asyPass. User authenticated to MSSQL with linked server failing DNS, added our record, started responder, captured havier:Passw0rd1. manager binary vulnerable to buffer overflow exploited with public poc for SYSTEM."
+
+
+system_prompt_intelligence: |
+  You are documenting an active pentest engagement. You have access to Obsidian tools to manage notes.
+  WORKFLOW:
+  1. First, check if the target note file exists using get_file though not mandatory each time.
+  2. If exists, read it to understand context and continue the narrative
+  3. COMPARE: What's in the file vs what's new
+  4. Decision point:
+    If ALL findings already documented, DO NOTHING, say "Already documented"
+    If SOME new findings, append ONLY the new parts
+    If New Findings are worth adding in an already present heading use patch_content
+    If file doesn't exist, create and write everything
+
+  use hostname not "target/victim", successful commands only, ignore errors/local commands, phase headings, explain in 2-3 line paragraphs then bullets for critical items only (creds in backticks, ports/services/shares as tables), no ---/recommendations/observations, treat as ongoing (more dumps coming), try connecting dots between commands to make findings meaningful, mention attack names where possible, no chat.
+    Style (do not add this in output it is just for reference): "SMB supports guest login with read to software$ share. Decompiled manager.exe revealed sqlsvc:3asyPass. User authenticated to MSSQL with linked server failing DNS, added our record, started responder, captured havier:Passw0rd1. manager binary vulnerable to buffer overflow exploited with public poc for SYSTEM."
+  BE SMART. DON'T REPEAT. Only document PROGRESS in the engagement.
+  Respond with done when no tool call is needed
