@@ -22,7 +22,7 @@ ShadowLedger hooks into your terminal during pentests, batches commands intellig
 
 **This isn't magic.** LLMs miss things. Creds get skipped. Narratives drift. You're still the human reviewing the draft. ShadowLedger just cuts 60-70% of the documentation grind so you start with a solid foundation instead of a blank page.
 
-** Context Limitation due to token budget**
+**Context Limitation due to token budget**
 To keep token usage lean and avoid compounding costs across a long engagement, each batch is processed as a fresh context — previous batches are not re-sent with each request. For best results, do a final review pass at the end of your session to connect findings across batches. Think of the output as a living draft, not a finished result. Use Intelligence Mode if you want context-aware notes across a full session.
 
 
