@@ -20,7 +20,7 @@ ShadowLedger hooks into your terminal during pentests, batches commands intellig
 3. **AI Processing** Batches results and sends to LLM (Groq, OpenRouter, Ollama, etc.)  
 4. **Structured Output** Generates phase-based notes with tables, credentials, and narrative
 
-**This isn't magic.** LLMs miss things. Creds get skipped. Narratives drift. You're still the human reviewing the draft. ShadowLedger just cuts 60-70% of the documentation grind so you start with a solid foundation instead of a blank page.
+**This isn't magic.** LLMs miss things. Creds get skipped. Narratives drift. You're still the human reviewing the draft. ShadowLedger just cuts 60-70% of the documentation grind so you start with a solid foundation instead of a blank page.Notes are generated per-batch  each send is a fresh context for the LLM. For best results, do a final review pass at the end of your session to connect findings across batches. Think of the output as a living draft, not a finished result
 
 
 ## ⚠️ Security Warning
@@ -93,9 +93,10 @@ Now run your pentest commands normally. ShadowLedger watches in the background.
 ## Workflow Tips
 
 - **Reorder commands in the TUI before sending** - LLMs can't infer chronology from timestamps alone  
-- **Set a reasonable token threshold** (2000-3000) to avoid rate limits  
+- **Set a reasonable token threshold** (1000-2000) to avoid rate limits  
 - **Check the whitelist** - add common tools (`nmap`, `nxc`, `secretsdump`) so they auto-capture  
 - **Always review generated notes** - LLMs hallucinate, miss creds, or misinterpret output
+- **Review after session** - Always do a final review pass at the end of your session to connect findings across batches and polish the draft into your final results.
 
 
 ## Features
